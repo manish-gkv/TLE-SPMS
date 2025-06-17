@@ -4,6 +4,8 @@ import cors from 'cors';
 
 import connectDatabase from './config/database.js';
 import studentRoutes from './routes/student.js';
+import jobs from "./services/job.js";
+import cornScheduler from './services/cron.js';
 
 const app = express();
 
@@ -20,6 +22,7 @@ const startServer = async () => {
     app.listen(process.env.PORT || 3000, () => {
         console.log(`Server is running on port ${process.env.PORT || 3000}`);
     });
+    cornScheduler.schedule(cornScheduler.CronTime, jobs);
 };
 
 startServer();

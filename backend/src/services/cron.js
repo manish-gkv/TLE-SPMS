@@ -16,6 +16,7 @@ class cornScheduler {
         if (this.task) {
             this.task.stop();
         }
+        this.setCronTime(cronTime);
         this.task = cron.schedule(cronTime, job, {
             scheduled: true,
             timezone: 'Asia/Kolkata'

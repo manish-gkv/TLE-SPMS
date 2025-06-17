@@ -19,10 +19,10 @@ const mailService = {
             },
             to,
             subject: "Inactivity Alert",
-            text: `You have been inactive for ${inactiveDays} days. Please log in to your account to avoid account suspension.`,
+            text: `You have been inactive for ${inactiveDays} days on Codeforces.`,
         };
         try {
-            await transporter.sendMail(mailOptions);
+            transporter.sendMail(mailOptions);
             console.log("Email sent successfully to:", to);
         } catch (error) {
             console.error("Error sending email:", error);

@@ -8,7 +8,8 @@ const InactivitySchema = new mongoose.Schema({
         index: true
     },
     reminderSentCount: {
-        type: Number
+        type: Number,
+        default: 0
     },
     lastSubmissionTime: {
         type: Date
