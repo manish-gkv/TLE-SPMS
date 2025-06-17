@@ -5,7 +5,8 @@ import { successResponse, customErrorResponse, internalErrorResponse } from "../
 import { 
     getStudentsService , 
     updateStudentService, 
-    deleteStudentService
+    deleteStudentService,
+    getStudentByIdService
 } from "../services/student.js";
 
 export async function getStudents(req, res){
@@ -26,8 +27,21 @@ export async function getStudents(req, res){
     }
 }
 
-export function getStudentById(req, res){
-    
+export async function getStudentById(req, res){
+    try{
+        const studentId = req.params.id;
+        const response = await getStudentByIdService(studentId);
+        return res.status(StatusCodes.OK).json(successResponse(response, "Student fetched successfully"));
+    }
+    catch(error){
+        console.log(error);
+        if(error.statusCode){
+            res.status(error.statusCode).json(customErrorResponse(error));
+        }
+        else{
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(internalErrorResponse(error));
+        }
+    }
 }
 
 export async function createStudent(req, res){

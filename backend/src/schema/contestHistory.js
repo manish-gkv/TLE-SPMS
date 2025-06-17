@@ -1,8 +1,8 @@
-import { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-const ContestHistorySchema = new Schema({
+const ContestHistorySchema = new mongoose.Schema({
     studentId: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'students',
         required: true
     },
@@ -37,4 +37,4 @@ const ContestHistorySchema = new Schema({
     
 },{timestamps: true});
 
-export default mongoose.model('contestHistory', ContestHistorySchema);
+export default mongoose.model('contestHistorys', ContestHistorySchema);

@@ -1,4 +1,6 @@
+import { StatusCodes } from "http-status-codes";
 import studentRepository from "../repository/student.js";
+import ClientError from "../utility/errors/clientError.js";
 
 export async function getStudentsService(params){
     let students;
@@ -13,8 +15,21 @@ export async function getStudentsService(params){
 }
 
 export async function getStudentByIdService(id){
-    const student = await studentRepository.getById(id);
-    return student;
+    try{
+        const student = await studentRepository.getById(id);
+        if (!student) {
+            throw new ClientError({
+                statusCode: StatusCodes.NOT_FOUND,
+                message: "Student not found",
+                explanation: `No student found with ID ${id}`
+            });
+        }
+        return student;
+    }
+    catch(error){
+        console.log("getStudentByIdService Error", error);
+        throw error;
+    }
 }
 
 export async function createStudentService(student) {
@@ -25,14 +40,14 @@ export async function createStudentService(student) {
     }
     catch(error) {
         if (error.code === 11000) {
-            throw {
-                statusCode: 400,
+            throw new ClientError({
+                statusCode: StatusCodes.BAD_REQUEST,
                 message: "Student with this data already exists",
                 explanation: "Duplicate key error"
-            };
+            });
         }
         throw {
-            statusCode: 500,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: "Internal server error",
             explanation: error.message
         };
@@ -48,14 +63,14 @@ export async function updateStudentService(student){
     catch(error) {
         console.log("updateStudentService Error", error);
         if (error.code === 11000) {
-            throw {
-                statusCode: 400,
+            throw new ClientError({
+                statusCode: StatusCodes.BAD_REQUEST,
                 message: "Student with this data already exists",
                 explanation: "Duplicate key error"
-            };
+            });
         }
         throw {
-            statusCode: 500,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: "Internal server error",
             explanation: error.message
         };
@@ -66,11 +81,11 @@ export async function deleteStudentService(student) {
     try{
         const response = await studentRepository.delete(student._id);
         if (!response) {
-            throw {
-                statusCode: 404,
+            throw new ClientError({
+                statusCode: StatusCodes.NOT_FOUND,
                 message: "Student not found",
                 explanation: "No student found with the provided ID"
-            };
+            });
         }
         return response;
     }
@@ -80,7 +95,7 @@ export async function deleteStudentService(student) {
             throw error;
         }
         throw {
-            statusCode: 500,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
             message: "Internal server error",
             explanation: error.message
         };

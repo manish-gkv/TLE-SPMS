@@ -27,7 +27,11 @@ const Student = new mongoose.Schema({
   maxRating: {
     type: Number,
     default: 0
-  }
+  },
+  lastSynced: {
+    type: Date,
+    default: Date.now
+  },
 }, { timestamps: true });
 
 export default mongoose.model('students', Student);
