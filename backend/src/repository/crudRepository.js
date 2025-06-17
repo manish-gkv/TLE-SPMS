@@ -5,7 +5,7 @@ export default function crudRepository(model) {
       return newDoc;
     },
     get: async function (query) {
-      const doc = await model.find({ ...query });
+      const doc = await model.findOne({ ...query });
       return doc;
     },
     getAll: async function (params) {

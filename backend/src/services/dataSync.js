@@ -1,9 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 
 import codeforces from "./codeforces/codeforces.js";
+
 import studentRepository from "../repository/student.js";
 import contestHistoryRepository from "../repository/contestHistory.js";
 import userSubmissionRepository from "../repository/userSubmissions.js";
+import inactivityRepository from "../repository/inactivity.js";
+
 import ClientError from "../utility/errors/clientError.js";
 
 
@@ -35,6 +38,12 @@ export default async function dataSyncService(id, handle) {
             }
         );
 
+        await inactivityRepository.findAndUpdate(
+            { studentId: id },
+            {
+                lastSubmissionTime: new Date(userSubmissionHistory.length > 0 ? userSubmissionHistory[0].creationTimeSeconds*1000 : null),
+            }
+        );
         console.log("Data sync successful for handle:", handle);
     }
     catch (error) {
