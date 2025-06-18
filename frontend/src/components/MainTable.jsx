@@ -1,6 +1,7 @@
 import Table from "./table/Table.jsx";
 
 export default function MainTable() {
+    
     return (
         <>
             <div className="container mt-5">

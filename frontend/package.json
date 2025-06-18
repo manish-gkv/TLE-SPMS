@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "react": "^19.1.0",
+    "react-calendar-heatmap": "^1.10.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
+    "recharts": "^2.15.3",
     "shimmer-effects-react": "^1.0.4"
   },
   "devDependencies": {

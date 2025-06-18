@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import Row from './Row.jsx';
 import Header from './Header.jsx';
-import { API_BASE_URL } from '../../utility/constants.js';
+import { API_BASE_URL ,MAIN_TABLE_HEADERS, MAIN_TABLE_FIELDS} from '../../utility/constants.js';
 
 export default function Table() {
     const [students, setStudents] = useState([]);
@@ -25,10 +25,10 @@ export default function Table() {
     return (
         <>
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <Header />
+                <Header tableHeader={MAIN_TABLE_HEADERS}/>
                 <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                     {students.map((student) => {
-                        return <Row key={student._id} {...student} />
+                        return <Row key={student._id} {...student} tableFields={MAIN_TABLE_FIELDS}/>
                     })}
                 </tbody>
             </table>

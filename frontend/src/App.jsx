@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import MainTable from "./components/MainTable";
-import Profile from "./components/Profile";
+import Profile from "./components/profile/Profile";
 import Error from "./components/Error";
 
 const appRouter = createBrowserRouter([
@@ -32,8 +32,8 @@ export default function App() {
 
   return (
     <>
-      <div className="min-h-screen bg-blue-50 dark:bg-black text-xs text-gray-900 dark:text-gray-100  p-4 justify-center">
-        <div className="container flex justify-end sticky top-0">
+      <div className="min-h-screen bg-blue-50 dark:bg-black text-xs text-gray-900 dark:text-gray-100  p-4">
+        <div className="container flex justify-end sticky top-0 mx-auto">
           <button
             onClick={toggleDarkMode}
             className="mt-2 p-2 bg-blue-200 dark:bg-gray-800 rounded"
@@ -42,7 +42,10 @@ export default function App() {
             <span>{darkMode ? 'Light' : 'Dark'} Mode</span>
           </button>
         </div>
-        <RouterProvider router={appRouter} />
+        <div className="container mx-auto">
+          <RouterProvider router={appRouter} />
+        </div>
+        
       </div>
     </>
   )

@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
     extend: {},
+    fontSize: {
+      tiny: '0.5rem',
+    }
   },
   plugins: [],
 }
