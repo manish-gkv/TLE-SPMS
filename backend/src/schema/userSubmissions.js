@@ -43,7 +43,11 @@ const UserSubmissionsSchema = new mongoose.Schema({
             },
             tags: [{
                 type: String
-            }]
+            }],
+            rating: {
+                type: Number,
+                default: null
+            }
         },
         verdict: {
             type: String,

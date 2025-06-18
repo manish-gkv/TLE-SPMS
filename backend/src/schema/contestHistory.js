@@ -32,6 +32,9 @@ const ContestHistorySchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
+            ratingUpdateTimeSeconds:{
+                type: Date
+            }
         }
     ]
     
