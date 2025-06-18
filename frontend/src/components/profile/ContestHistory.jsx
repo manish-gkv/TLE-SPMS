@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Header from '../table/Header';
 import { CONTEST_HISTORY_FIELDS, CONTEST_HISTORY_HEADERS } from '../../utility/constants';
 import Filter from '../utility/Filter';
@@ -52,13 +53,38 @@ function Table(props) {
 }
 
 export default function ContestHistory(props) {
-    const { contestHistory } = props;
+    const { contestHistory } = props; 
+    const [selectedFilter, setSelectedFilter] = useState('all');
+    const [filteredContestHistory, setFilteredContestHistory] = useState(contestHistory);
     const filterOptions = [
         { value: 'all', label: 'All' },
         { value: '30', label: 'Last 30 Days' },
         { value: '90', label: 'Last 90 Days' },
         { value: '365', label: 'Last 365 Days' }
     ];
+
+    useEffect(() => {
+       const days = {
+            'all': null,
+            '30': 30,
+            '90': 90,
+            '365': 365
+        };
+        const filterDays = days[selectedFilter];
+
+        const data = contestHistory.filter((contest) => {
+            if (!filterDays) return true;
+            const contestDate = new Date(contest.ratingUpdateTimeSeconds * 1000);
+            const currentDate = new Date();
+            const diffTime = Math.abs(currentDate - contestDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays <= filterDays;
+        });
+        // Sort by ratingUpdateTimeSeconds in descending order 
+        data.sort((a, b) => b.ratingUpdateTimeSeconds - a.ratingUpdateTimeSeconds);
+        setFilteredContestHistory(data);
+        
+    }, [selectedFilter]);
 
     return (
         <div className="col-span-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm p-6">
@@ -69,11 +95,12 @@ export default function ContestHistory(props) {
                 <Filter 
                     options={filterOptions} 
                     filterId={"ContestHistory"}
+                    onFilterChange={(value) => setSelectedFilter(value)}
                 />
             </div>
             
             <div className="max-h-[70vh] overflow-x-auto overflow-y-auto rounded-lg">
-                <Table contestHistory={contestHistory} />
+                <Table contestHistory={filteredContestHistory} />
             </div>
         </div>
     );
