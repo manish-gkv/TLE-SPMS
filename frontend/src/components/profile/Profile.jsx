@@ -4,6 +4,7 @@ import StudentInfo from "./StudentInfo";
 import ContestHistory from "./ContestHistory";
 import HeatMap from "./HeatMap";
 import RatingWiseQuestions from "./RatingWiseQuestions";
+import RatingChange from "./RatingChange";
 import { API_BASE_URL } from "../../utility/constants";
 
 export default function Profile() {
@@ -43,6 +44,7 @@ export default function Profile() {
             <div className="container  mx-auto mt-8 flex flex-col gap-4">
                 <StudentInfo student={userData} studentSubmissionData={userSubmissionData}/>
                 <HeatMap userSubmissionData={userSubmissionData}/>
+                <RatingChange userContestHistory={userContestHistory}/>
                 <RatingWiseQuestions userSubmissionData={userSubmissionData}/>
                 <ContestHistory contestHistory={userContestHistory}/>
             </div>

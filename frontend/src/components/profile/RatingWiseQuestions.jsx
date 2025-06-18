@@ -6,7 +6,7 @@ export default function RatingWiseQuestions(props) {
     const data = GetRatingWiseQuestions(userSubmissionData.submissions);
     return (
         <>
-            <div className="bg-white dark:bg-gray-900 p-1 sm:p-4 rounded-lg shadow-sm h-80">
+            <div className="bg-white dark:bg-gray-900 px-4 py-12 rounded-lg shadow-sm h-80">
                 <h2 className="text-center text-lg font-semibold mb-4">Rating Wise Questions</h2>
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={data}>
