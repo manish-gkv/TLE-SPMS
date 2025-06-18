@@ -11,6 +11,12 @@ const transporter = nodemailer.createTransport({
 });
 
 const mailService = {
+    /*
+        Sends an email notification to the user.
+        param {string} to - The email address of the recipient.
+        param {number} inactiveDays - The number of days the user has been inactive.
+        returns : void
+    */
     sendMail: async (to, inactiveDays) => {
         const mailOptions = {
             from: {

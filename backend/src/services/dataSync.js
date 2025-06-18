@@ -11,6 +11,11 @@ import ClientError from "../utility/errors/clientError.js";
 
 
 export default async function dataSyncService(id, handle) {
+    /*
+    Synchronizes student data with Codeforces.
+    param -> id - The ID of the student whose data is to be synchronized.
+    param -> handle - The Codeforces handle of the student.
+    */
     try {
         const profileDetails = await codeforces.getProfileDetails(handle);
         //console.log("Profile Details:", profileDetails);

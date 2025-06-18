@@ -1,6 +1,11 @@
 import cron from 'node-cron';
 
 class cornScheduler {
+    /*
+    This class manages the scheduling of cron jobs.
+    It allows setting a cron time, scheduling a job, and validating cron time formats.
+    It uses the 'node-cron' library to handle cron jobs.
+    */
     constructor() {
         this.task = null;
         this.job = null;

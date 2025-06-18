@@ -6,6 +6,11 @@ import mailService from "./email.js";
 import { INACTIVE_DAYS_THRESHOLD } from "../utility/constant.js";
 
 async function jobs() {
+    /*
+    This function is responsible for running scheduled jobs.
+    It retrieves all students, syncs their data, checks for inactivity,
+    and sends reminder emails if they have been inactive for a specified number of days.
+    */
     console.log("Jobs service started at", new Date().toISOString());
     try {
         const students = await studentRepository.getAll();

@@ -3,6 +3,22 @@ import studentRepository from "../repository/student.js";
 import ClientError from "../utility/errors/clientError.js";
 
 export async function getStudentsService(params){
+    /*
+    Retrieves a list of students based on the provided parameters.
+    param -> params - An object containing query parameters for pagination and sorting.
+    returns : [
+        {
+            _id: "12345",
+            name: "John Doe",
+            codeforcesHandle: "johndoe",
+            email: "sample@gmail.com",
+            currentRating: 1500,
+            maxRating: 1600,
+            lastSynced: "2023-10-01T12:00:00Z"
+        },
+        ...
+    ]
+    */
     let students;
     if(params.isPaginated){
         students =await studentRepository.getPaginated({page:parseInt(params.page),limit:parseInt(params.limit), sort:{[params.sortBy]: params.order === "asc" ? 1 : -1}});
@@ -15,6 +31,19 @@ export async function getStudentsService(params){
 }
 
 export async function getStudentByIdService(id){
+    /*
+    Retrieves a student by their ID.
+    param -> id - The ID of the student to be retrieved.
+    returns : {
+        _id: "12345",
+        name: "John Doe",
+        codeforcesHandle: "johndoe",
+        email: "sample@gmail.com",
+        currentRating: 1500,
+        maxRating: 1600,
+        lastSynced: "2023-10-01T12:00:00Z"
+    }
+    */
     try{
         const student = await studentRepository.getById(id);
         if (!student) {
@@ -33,6 +62,16 @@ export async function getStudentByIdService(id){
 }
 
 export async function createStudentService(student) {
+    /*
+    Creates a new student.
+    param -> student - An object containing student details.
+    returns : {
+        _id: "12345",
+        name: "John Doe",
+        codeforcesHandle: "johndoe",
+        email: "sample@gmail.com",
+    }
+    */
     try{
         const newStudent = await studentRepository.create(student);
         const studentDeatils = await studentRepository.getById(newStudent._id);
@@ -56,6 +95,19 @@ export async function createStudentService(student) {
 }
 
 export async function updateStudentService(student){
+    /*
+    Updates an existing student.
+    param -> student - An object containing updated student details.
+    returns : {
+        _id: "12345",
+        name: "John Doe",
+        codeforcesHandle: "johndoe",
+        email: "sample@gmail.com",
+        currentRating: 1500,
+        maxRating: 1600,
+        lastSynced: "2023-10-01T12:00:00Z"
+    }
+    */
     try{
         const updatedStudent = await studentRepository.update(student._id, student);
         return updatedStudent;
@@ -78,6 +130,13 @@ export async function updateStudentService(student){
 }
 
 export async function deleteStudentService(student) {
+    /*
+    Deletes a student by their ID.
+    param -> student - An object containing the ID of the student to be deleted.
+    returns : {
+        message: "Student deleted successfully"
+    }
+    */
     try{
         const response = await studentRepository.delete(student._id);
         if (!response) {
