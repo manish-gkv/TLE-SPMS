@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import studentRepository from "../repository/student.js";
 import ClientError from "../utility/errors/clientError.js";
+import dataSyncService from "./dataSync.js";
 
 export async function getStudentsService(params){
     /*
@@ -74,7 +75,9 @@ export async function createStudentService(student) {
     */
     try{
         const newStudent = await studentRepository.create(student);
+        await dataSyncService(newStudent._id, newStudent.codeforcesHandle);
         const studentDeatils = await studentRepository.getById(newStudent._id);
+
         return studentDeatils;
     }
     catch(error) {
@@ -110,6 +113,7 @@ export async function updateStudentService(student){
     */
     try{
         const updatedStudent = await studentRepository.update(student._id, student);
+        await dataSyncService(updatedStudent._id, updatedStudent.codeforcesHandle);
         return updatedStudent;
     }
     catch(error) {
