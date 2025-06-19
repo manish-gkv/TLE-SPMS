@@ -1,13 +1,43 @@
+import { useState, useEffect } from "react";
+import GetTotalSolved from "../../utility/getTotalSolved";
 import Filter from "../utility/Filter";
+import GetMostDifficultRating from "../../utility/getMostDifficultRating";
+import GetAverageRating from "../../utility/getAverageRating";
+import GetProblemSolvedPerDayCount from "../../utility/getProblemSolvedPerDayCount";
+
+const days = {
+    all: null,
+    7: 7,
+    30: 30,
+    90: 90
+};
 
 export default function StudentInfo(props) {
     const { student, studentSubmissionData } = props;
+    const [selectedFilter, setSelectedFilter] = useState("all");
+    const [filteredSubmissions, setFilteredSubmissions] = useState(studentSubmissionData.submissions || []);
     const filterOptions = [
         { value: "all", label: "All" },
         { value: "7", label: "last 7 days" },
         { value: "30", label: "last 30 days" },
         { value: "90", label: "last 90 days" }
     ];
+
+    useEffect(() => {
+
+        const filterDays = days[selectedFilter];
+        const data = studentSubmissionData.submissions.filter((submission) => {
+            if (!submission.creationTimeSeconds) return false; // Skip date is not available
+            const submissionDate = new Date(submission.creationTimeSeconds * 1000);
+            if (!filterDays) return true;
+            const currentDate = new Date();
+            const diffTime = Math.abs(currentDate - submissionDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return !filterDays || diffDays <= filterDays;
+        });
+        setFilteredSubmissions(data);
+    }, [selectedFilter, studentSubmissionData]);
+
     return (
         <>
             <div className="col-span-2 justify-between items-center p-6 bg-white dark:bg-gray-900 rounded-lg shadow-sm dark:shadow-gray-800/50">
@@ -16,7 +46,11 @@ export default function StudentInfo(props) {
                 </h2>
 
                 <div className="mb-6">
-                    <Filter options={filterOptions} filterId={"STudentDataFilter"} />
+                    <Filter
+                        options={filterOptions}
+                        filterId={"STudentDataFilter"}
+                        onFilterChange={(value) => setSelectedFilter(value)}
+                    />
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-8 items-center sm:items-start">
@@ -57,28 +91,28 @@ export default function StudentInfo(props) {
                         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                             <p className="text-sm text-gray-500 dark:text-gray-400">Total Solved</p>
                             <p className="font-medium text-gray-800 dark:text-gray-200">
-                                {student.totalSolved || 0}
+                                {GetTotalSolved(filteredSubmissions) || 0}
                             </p>
                         </div>
 
                         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                             <p className="text-sm text-gray-500 dark:text-gray-400">Average Rating</p>
                             <p className="font-medium text-gray-800 dark:text-gray-200">
-                                {student.avgRating || 0}
+                                {GetAverageRating(filteredSubmissions) || 0}
                             </p>
                         </div>
 
                         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                             <p className="text-sm text-gray-500 dark:text-gray-400">Problems/Day</p>
                             <p className="font-medium text-gray-800 dark:text-gray-200">
-                                {student.avgppd || 0}
+                                {days[selectedFilter] ? (GetTotalSolved(filteredSubmissions)/days[selectedFilter]).toFixed(5): GetProblemSolvedPerDayCount(filteredSubmissions)}
                             </p>
                         </div>
 
                         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg sm:col-span-2">
                             <p className="text-sm text-gray-500 dark:text-gray-400">Most Difficult Problem Solved</p>
                             <p className="font-medium text-gray-800 dark:text-gray-200">
-                                {student.mdps || 0} rating
+                                {GetMostDifficultRating(filteredSubmissions) || 0} rating
                             </p>
                         </div>
                     </div>
