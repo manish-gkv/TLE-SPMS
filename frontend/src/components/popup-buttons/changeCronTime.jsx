@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { API_BASE_URL } from "../../utility/constants";
+import { toast } from "react-toastify";
 
 function submitButtonHandler(cronTime, setIsOpen) {
     
@@ -15,12 +16,15 @@ function submitButtonHandler(cronTime, setIsOpen) {
             });
             if (!response.ok) {
                 console.error("Error syncing cron time");
+                toast.error("Error syncing cron time")
                 return;
             }
             const data = await response.json();
             console.log("Cron time updated successfully:", data.cronTime);
+            toast.success("cron-time changed");
         } catch (error) {
             console.error("Error updating cron time:", error);
+            toast.error("Error updating cron time");
         }
     };
 }
