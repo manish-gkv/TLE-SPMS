@@ -2,25 +2,11 @@ import { useEffect, useState } from 'react';
 
 import Row from './Row.jsx';
 import Header from './Header.jsx';
-import { API_BASE_URL ,MAIN_TABLE_HEADERS, MAIN_TABLE_FIELDS} from '../../utility/constants.js';
+import { MAIN_TABLE_HEADERS, MAIN_TABLE_FIELDS} from '../../utility/constants.js';
 
-export default function Table() {
-    const [students, setStudents] = useState([]);
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(API_BASE_URL + "/students", {
-                method: 'GET',
-            });
-            if (!response.ok) {
-                console.error("Failed to fetch data");
-                return;
-            }
-
-            const json = await response.json();
-            setStudents(json.data);
-        }
-        fetchData();
-    }, []);
+export default function Table(props) {
+    
+    const { students, setStudents } = props;
 
     return (
         <>
@@ -28,7 +14,7 @@ export default function Table() {
                 <Header tableHeader={MAIN_TABLE_HEADERS}/>
                 <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                     {students.map((student) => {
-                        return <Row key={student._id} {...student} tableFields={MAIN_TABLE_FIELDS}/>
+                        return <Row key={student._id} {...student} tableFields={MAIN_TABLE_FIELDS} studentList={{students, setStudents}}/>
                     })}
                 </tbody>
             </table>

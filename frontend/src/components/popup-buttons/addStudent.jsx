@@ -1,52 +1,64 @@
-import{useEffect, useState}from'react';
-import{API_BASE_URL}from'../../utility/constants';
+import { useState } from 'react';
+import { API_BASE_URL } from '../../utility/constants';
 
-function saveChangesHandler(studentData, setIsOpen, students, setStudents) {
-    return async ()=> {
+function saveChangesHandler(props) {
+    const { studentData, setIsOpen, students, setStudents } = props;
+    return async () => {
         setIsOpen(false);
         try {
             const response = await fetch(API_BASE_URL + '/students/', {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                method: 'PUT',
-                body: JSON.stringify({_id: studentData._id, name: studentData.name, email: studentData.email, phoneNumber: studentData.phoneNumber, codeforcesHandle: studentData.codeforcesHandle}),
+                method: 'POST',
+                body: JSON.stringify({
+                    _id: studentData._id,
+                    name: studentData.name,
+                    email: studentData.email,
+                    phoneNumber: studentData.phoneNumber,
+                    codeforcesHandle: studentData.codeforcesHandle
+                }),
             });
             if (!response.ok) {
                 console.error("Error updating student data");
                 return;
             }
             const data = await response.json();
-            setStudents(students.map(student => student._id === studentData._id ? studentData : student));
+            setStudents([...students, studentData]);
             console.log("Student data updated successfully:", data);
         } catch (error) {
             console.error("Error updating student data:", error);
         }
-    }
+    };
 }
 
-export default function EditStudent(props) {
+export default function AddStudent(props) {
     const [isOpen, setIsOpen] = useState(false);
-    const [studentData, setStudentData] = useState({...props});
-    const { students, setStudents } = props.studentList;
+    const { students, setStudents } = props;
+    const [studentData, setStudentData] = useState({
+        name: '',
+        email: '',
+        phoneNumber: '',
+        codeforcesHandle: ''
+    });
     return (
         <>
             <button
-            className="ml-4 text-gray-600 hover:text-red-900 dark:text-gray-400 dark:hover:text-red-300"
-            onClick={() => setIsOpen(true)}
-        >
-            Edit
-        </button>
+                className="mt-2 p-2 bg-blue-200 dark:bg-gray-800 rounded"
+                onClick={() => setIsOpen(true)}
+            >
+                Add Student
+            </button>
             {isOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-50">
                     <div className="bg-white dark:bg-gray-800 p-6 rounded shadow-lg">
-                        <h2 className="text-lg font-semibold mb-4">Edit Student</h2>
+                        <h2 className="text-lg font-semibold mb-4">Add Student</h2>
                         <form>
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
                                 <input
                                     type="text"
-                                    value={studentData?.name || ''}
+                                    value={studentData.name}
                                     onChange={(e) => setStudentData({ ...studentData, name: e.target.value })}
                                     className="border border-gray-300 dark:border-gray-600 p-2 rounded w-full mb-4 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
@@ -55,7 +67,7 @@ export default function EditStudent(props) {
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
                                 <input
                                     type="email"
-                                    value={studentData?.email || ''}
+                                    value={studentData.email}
                                     onChange={(e) => setStudentData({ ...studentData, email: e.target.value })}
                                     className="border border-gray-300 dark:border-gray-600 p-2 rounded w-full mb-4 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
@@ -64,7 +76,7 @@ export default function EditStudent(props) {
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
                                 <input
                                     type="tel"
-                                    value={studentData?.phoneNumber || ''}
+                                    value={studentData.phoneNumber}
                                     onChange={(e) => setStudentData({ ...studentData, phoneNumber: e.target.value })}
                                     className="border border-gray-300 dark:border-gray-600 p-2 rounded w-full mb-4 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
@@ -73,24 +85,22 @@ export default function EditStudent(props) {
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Codeforces Handle</label>
                                 <input
                                     type="text"
-                                    value={studentData?.codeforcesHandle || ''}
-                                    required
+                                    value={studentData.codeforcesHandle}
                                     onChange={(e) => setStudentData({ ...studentData, codeforcesHandle: e.target.value })}
                                     className="border border-gray-300 dark:border-gray-600 p-2 rounded w-full mb-4 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                             </div>
-                            
                             <button
                                 type="button"
-                                onClick={saveChangesHandler(studentData, setIsOpen, students, setStudents)}
-                                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                onClick={saveChangesHandler({ studentData, setIsOpen, students, setStudents })}
                             >
-                                Save Changes
+                                Add Student
                             </button>
                             <button
                                 type="button"
+                                className="ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
                                 onClick={() => setIsOpen(false)}
-                                className="ml-2 mt-4 bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded"
                             >
                                 Cancel
                             </button>
