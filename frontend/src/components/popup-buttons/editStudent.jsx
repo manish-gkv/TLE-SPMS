@@ -1,5 +1,6 @@
 import{useEffect, useState}from'react';
 import{API_BASE_URL}from'../../utility/constants';
+import { toast } from 'react-toastify';
 
 function saveChangesHandler(studentData, setIsOpen, students, setStudents, isButtonDisabled, setIsButtonDisabled) {
     return async ()=> {
@@ -14,6 +15,7 @@ function saveChangesHandler(studentData, setIsOpen, students, setStudents, isBut
             });
             if (!response.ok) {
                 console.error("Error updating student data");
+                toast.error("Edit Failed");
                 return;
             }
             const json = await response.json();
@@ -21,8 +23,10 @@ function saveChangesHandler(studentData, setIsOpen, students, setStudents, isBut
             setIsOpen(false);
             setStudents(students.map(student => student._id === studentData._id ? data : student));
             console.log("Student data updated successfully:", data);
+            toast.success("Saved Succesfully");
         } catch (error) {
             console.error("Error updating student data:", error);
+            toast.error("Edit Failed");
         }
         finally {
             setIsButtonDisabled(false);

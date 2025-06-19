@@ -4,6 +4,9 @@ import Filter from "../utility/Filter";
 import GetMostDifficultRating from "../../utility/getMostDifficultRating";
 import GetAverageRating from "../../utility/getAverageRating";
 import GetProblemSolvedPerDayCount from "../../utility/getProblemSolvedPerDayCount";
+import { API_BASE_URL } from "../../utility/constants";
+import { toast } from "react-toastify";
+
 
 const days = {
     all: null,
@@ -11,6 +14,35 @@ const days = {
     30: 30,
     90: 90
 };
+
+function SyncNowButtonHandler(_id, handle) {
+    return (
+        async () => {
+            try {
+                const response = await fetch(API_BASE_URL+`/students/${_id}/sync-data`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ handle: handle }) 
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log('Sync successful:', data);
+                toast.success("Sync successful! Reload the Page for see changes",
+
+                );
+
+
+            } catch (error) {
+                console.error('Error during sync:', error);
+                toast.error(error.message)
+            }
+        }
+    )
+}
 
 export default function StudentInfo(props) {
     const { student, studentSubmissionData } = props;
@@ -65,6 +97,12 @@ export default function StudentInfo(props) {
                         <h1 className="text-lg font-bold text-gray-700 dark:text-gray-300">
                             {student.name || "Student Name"}
                         </h1>
+                        <button
+                            className="mt-2 p-2 bg-blue-200 dark:bg-gray-800 rounded"
+                            onClick={SyncNowButtonHandler(student._id, student.codeforcesHandle)}
+                        >
+                            SyncNow
+                        </button>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">

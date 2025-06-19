@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {API_BASE_URL} from '../../utility/constants';
+import { toast } from 'react-toastify';
 
 function deleteStudentHandler(studentId, setIsOpen, students, setStudents) {
     return async () => {
@@ -14,13 +15,17 @@ function deleteStudentHandler(studentId, setIsOpen, students, setStudents) {
             });
             if (!response.ok) {
                 console.error("Error deleting student data");
+                toast.error('')
                 return;
             }
-            const data = await response.json();
+            const json = await response.json();
+            const data = json.data;
             setStudents(students.filter(student => student._id !== studentId));
+            toast.success(`${data.name} Deleted Successfully`);
             console.log("Student deleted successfully:", data);
         } catch (error) {
             console.error("Error deleting student data:", error);
+            toast.error(error.message);
         }
     };
 }

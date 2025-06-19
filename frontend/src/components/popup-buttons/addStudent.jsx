@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { API_BASE_URL } from '../../utility/constants';
+import { toast } from 'react-toastify';
 
 function saveChangesHandler(props) {
     const { studentData, setIsOpen, students, setStudents, isButtonDisabled, setIsButtonDisabled} = props;
@@ -20,16 +21,19 @@ function saveChangesHandler(props) {
                 }),
             });
             if (!response.ok) {
-                console.error("Error updating student data");
+                console.error("Error Adding student data");
+                toast.error('Error in Adding Student')
                 return;
             }
             const json = await response.json();
             const data = json.data;
             setStudents([...students, data]);
             setIsOpen(false);
+            toast.success(`${data.name} Added`);
             console.log("Student data updated successfully:", data);
         } catch (error) {
             console.error("Error updating student data:", error);
+            toast.error(error.message)
         } finally {
             setIsButtonDisabled(false);
         }

@@ -25,7 +25,7 @@ router.delete("/", deleteStudent);
 
 router.get("/:id/contest-history", getContestHistory);
 router.put("/:id/update-handle", updateHandle);
-router.get("/:id/sync-data", syncData);
+router.post("/:id/sync-data", syncData);
 router.get("/:id/submissions", getSubmissions);
 
 export default router;
