@@ -1,9 +1,9 @@
 import{useEffect, useState}from'react';
 import{API_BASE_URL}from'../../utility/constants';
 
-function saveChangesHandler(studentData, setIsOpen, students, setStudents) {
+function saveChangesHandler(studentData, setIsOpen, students, setStudents, isButtonDisabled, setIsButtonDisabled) {
     return async ()=> {
-        setIsOpen(false);
+        setIsButtonDisabled(true);
         try {
             const response = await fetch(API_BASE_URL + '/students/', {
                 headers: {
@@ -16,17 +16,23 @@ function saveChangesHandler(studentData, setIsOpen, students, setStudents) {
                 console.error("Error updating student data");
                 return;
             }
-            const data = await response.json();
+            const json = await response.json();
+            const data = json.data;
+            setIsOpen(false);
             setStudents(students.map(student => student._id === studentData._id ? studentData : student));
             console.log("Student data updated successfully:", data);
         } catch (error) {
             console.error("Error updating student data:", error);
+        }
+        finally {
+            setIsButtonDisabled(false);
         }
     }
 }
 
 export default function EditStudent(props) {
     const [isOpen, setIsOpen] = useState(false);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [studentData, setStudentData] = useState({...props});
     const { students, setStudents } = props.studentList;
     return (
@@ -82,15 +88,17 @@ export default function EditStudent(props) {
                             
                             <button
                                 type="button"
-                                onClick={saveChangesHandler(studentData, setIsOpen, students, setStudents)}
-                                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                                onClick={saveChangesHandler(studentData, setIsOpen, students, setStudents, isButtonDisabled, setIsButtonDisabled)}
+                                disabled={isButtonDisabled}
+                                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-blue-300"
                             >
                                 Save Changes
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setIsOpen(false)}
-                                className="ml-2 mt-4 bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded"
+                                disabled={isButtonDisabled}
+                                className="ml-2 mt-4 bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-4 py-2 rounded disabled:bg-gray-400 hover:bg-gray-400 dark:hover:bg-gray-500"
                             >
                                 Cancel
                             </button>

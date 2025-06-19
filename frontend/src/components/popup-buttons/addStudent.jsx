@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { API_BASE_URL } from '../../utility/constants';
 
 function saveChangesHandler(props) {
-    const { studentData, setIsOpen, students, setStudents } = props;
+    const { studentData, setIsOpen, students, setStudents, isButtonDisabled, setIsButtonDisabled} = props;
     return async () => {
-        setIsOpen(false);
+        setIsButtonDisabled(true);
         try {
             const response = await fetch(API_BASE_URL + '/students/', {
                 headers: {
@@ -23,17 +23,22 @@ function saveChangesHandler(props) {
                 console.error("Error updating student data");
                 return;
             }
-            const data = await response.json();
-            setStudents([...students, studentData]);
+            const json = await response.json();
+            const data = json.data;
+            setStudents([...students, data]);
+            setIsOpen(false);
             console.log("Student data updated successfully:", data);
         } catch (error) {
             console.error("Error updating student data:", error);
+        } finally {
+            setIsButtonDisabled(false);
         }
     };
 }
 
 export default function AddStudent(props) {
     const [isOpen, setIsOpen] = useState(false);
+    const[isButtonDisabled, setIsButtonDisabled] = useState(false);
     const { students, setStudents } = props;
     const [studentData, setStudentData] = useState({
         name: '',
@@ -68,6 +73,9 @@ export default function AddStudent(props) {
                                 <input
                                     type="email"
                                     value={studentData.email}
+                                    pattern='^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                                    title='Please enter a valid email address'
+                                    required
                                     onChange={(e) => setStudentData({ ...studentData, email: e.target.value })}
                                     className="border border-gray-300 dark:border-gray-600 p-2 rounded w-full mb-4 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
@@ -76,6 +84,9 @@ export default function AddStudent(props) {
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
                                 <input
                                     type="tel"
+                                    pattern='^\d{10}$'
+                                    title='Please enter a valid 10-digit phone number'
+                                    required
                                     value={studentData.phoneNumber}
                                     onChange={(e) => setStudentData({ ...studentData, phoneNumber: e.target.value })}
                                     className="border border-gray-300 dark:border-gray-600 p-2 rounded w-full mb-4 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -92,15 +103,17 @@ export default function AddStudent(props) {
                             </div>
                             <button
                                 type="button"
-                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                onClick={saveChangesHandler({ studentData, setIsOpen, students, setStudents })}
+                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-300"
+                                disabled={isButtonDisabled}
+                                onClick={saveChangesHandler({ studentData, setIsOpen, students, setStudents, isButtonDisabled, setIsButtonDisabled})}
                             >
                                 Add Student
                             </button>
                             <button
                                 type="button"
-                                className="ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                                className="ml-2 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 disabled:bg-gray-200"
                                 onClick={() => setIsOpen(false)}
+                                disabled={isButtonDisabled}
                             >
                                 Cancel
                             </button>
