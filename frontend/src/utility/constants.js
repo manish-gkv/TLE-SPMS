@@ -4,7 +4,7 @@ export const MAIN_TABLE_FIELDS = ["name", "email", "phoneNumber", "codeforcesHan
 
 export const CONTEST_HISTORY_HEADERS = ["Contest Name", "Rank", "Rating Change", "Unsolved"];
 
-export const CONTEST_HISTORY_FIELDS = ["contestName", "rank", "ratingChange", "unsolved"];
+export const CONTEST_HISTORY_FIELDS = ["contestName", "rank", "ratingChange", "unsolvedQuestions"];
 
 export const API_BASE_URL = "http://localhost:3000";
 

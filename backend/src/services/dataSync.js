@@ -6,8 +6,9 @@ import studentRepository from "../repository/student.js";
 import contestHistoryRepository from "../repository/contestHistory.js";
 import userSubmissionRepository from "../repository/userSubmissions.js";
 import inactivityRepository from "../repository/inactivity.js";
-
+import getUpadtedContestHistoryWithUnsolvedCount from "./codeforces/getUpdatedContestHistoryWithUnsolvedCount.js";
 import ClientError from "../utility/errors/clientError.js";
+import problemSetRepository from "../repository/problemSet.js";
 
 
 export default async function dataSyncService(id, handle) {
@@ -25,12 +26,12 @@ export default async function dataSyncService(id, handle) {
             lastSynced: new Date(),
         });
 
-        const contestHistory = await codeforces.getRatedContestHistoryDetails(handle);
-        //console.log(contestHistory);
-        await contestHistoryRepository.findAndUpdate(
-            { studentId: id },
+        const problemSet = await codeforces.getProblemSet();
+        //console.log(problemSet);
+        await problemSetRepository.findAndUpdate(
+            {},
             {
-                contest: contestHistory,
+                problems:problemSet,
             }
         );
 
@@ -42,6 +43,18 @@ export default async function dataSyncService(id, handle) {
                 submissions: userSubmissionHistory,
             }
         );
+
+        const contestHistory = await codeforces.getRatedContestHistoryDetails(handle);
+        //console.log(contestHistory);
+        const updatedContestHistory = getUpadtedContestHistoryWithUnsolvedCount(userSubmissionHistory, contestHistory, problemSet);
+        await contestHistoryRepository.findAndUpdate(
+            { studentId: id },
+            {
+                contest: updatedContestHistory,
+            }
+        );
+
+        
 
         await inactivityRepository.findAndUpdate(
             { studentId: id },
