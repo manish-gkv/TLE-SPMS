@@ -1,5 +1,6 @@
 import { Link, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
+import ChangeCronTime from "./popup-buttons/changeCronTime";
 export default function Nav() {
     const [darkMode, setDarkMode] = useState(() => {
         const savedMode = localStorage.getItem('darkMode');
@@ -18,7 +19,7 @@ export default function Nav() {
                 <Link to={"/"}>
                     <button className="mt-2 p-2 bg-blue-200 dark:bg-gray-800 rounded">Home</button>
                 </Link>
-
+                <ChangeCronTime />
                 <button
                     onClick={toggleDarkMode}
                     className="mt-2 p-2 bg-blue-200 dark:bg-gray-800 rounded"
