@@ -15,9 +15,11 @@ const days = {
     90: 90
 };
 
-function SyncNowButtonHandler(_id, handle) {
+function SyncNowButtonHandler(_id, handle, setIsSyncing) {
     return (
         async () => {
+            setIsSyncing(true);
+            toast.info("Syncing data, please wait...")
             try {
                 const response = await fetch(API_BASE_URL+`/students/${_id}/sync-data`, {
                     method: 'POST',
@@ -40,11 +42,15 @@ function SyncNowButtonHandler(_id, handle) {
                 console.error('Error during sync:', error);
                 toast.error(error.message)
             }
+            finally {
+                setIsSyncing(false);
+            }
         }
     )
 }
 
 export default function StudentInfo(props) {
+    const [isSyncing, setIsSyncing] = useState(false);
     const { student, studentSubmissionData } = props;
     const [selectedFilter, setSelectedFilter] = useState("all");
     const [filteredSubmissions, setFilteredSubmissions] = useState(studentSubmissionData.submissions || []);
@@ -98,11 +104,16 @@ export default function StudentInfo(props) {
                             {student.name || "Student Name"}
                         </h1>
                         <button
-                            className="mt-2 p-2 bg-blue-200 dark:bg-gray-800 rounded"
-                            onClick={SyncNowButtonHandler(student._id, student.codeforcesHandle)}
+                            className="mt-2 p-2 bg-blue-200 dark:bg-gray-800 rounded disabled:hover:bg-blue-300 dark:disabled:hover:bg-gray-700 dark:text-gray-200 shadow-sm disabled:opacity-50"
+                            disabled={isSyncing}
+                            type="button"
+                            onClick={SyncNowButtonHandler(student._id, student.codeforcesHandle, setIsSyncing)}
                         >
                             SyncNow
                         </button>
+                        <h1 className="text-sm text-gray-500 dark:text-gray-400">
+                            last sync <br /> {(student.lastSynced && new Date(student.lastSynced).toLocaleString()) || "Never"}
+                        </h1>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
