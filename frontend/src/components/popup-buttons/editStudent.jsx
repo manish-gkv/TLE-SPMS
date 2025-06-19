@@ -19,7 +19,7 @@ function saveChangesHandler(studentData, setIsOpen, students, setStudents, isBut
             const json = await response.json();
             const data = json.data;
             setIsOpen(false);
-            setStudents(students.map(student => student._id === studentData._id ? studentData : student));
+            setStudents(students.map(student => student._id === studentData._id ? data : student));
             console.log("Student data updated successfully:", data);
         } catch (error) {
             console.error("Error updating student data:", error);

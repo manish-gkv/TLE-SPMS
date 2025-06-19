@@ -114,7 +114,8 @@ export async function updateStudentService(student){
     try{
         const updatedStudent = await studentRepository.update(student._id, student);
         await dataSyncService(updatedStudent._id, updatedStudent.codeforcesHandle);
-        return updatedStudent;
+        const studentDeatils = await studentRepository.getById(updatedStudent._id);
+        return studentDeatils;
     }
     catch(error) {
         console.log("updateStudentService Error", error);

@@ -32,7 +32,8 @@ function Table(props) {
                         contestHistory.map((contest) => (
                             <Row 
                                 key={contest._id} 
-                                {...contest} 
+                                {...contest } 
+                                ratingChange={contest.newRating - contest.oldRating}
                                 tableFields={CONTEST_HISTORY_FIELDS}
                             />
                         ))
