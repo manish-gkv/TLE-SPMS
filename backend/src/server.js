@@ -6,7 +6,8 @@ import connectDatabase from './config/database.js';
 import studentRoutes from './routes/student.js';
 import jobs from "./services/job.js";
 import cornScheduler from './services/cron.js';
-import {syncTime, validateCronTime} from './controllers/sync-time.js';
+import {syncTime, validateCronTime, getCronTime} from './controllers/sync-time.js';
+import { get } from 'mongoose';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.get('/', (req, res) => {
     res.send('TLE-SPMS Backend is running');
 });
 app.post('/sync-time', syncTime);
+app.get('/get-cron-time', getCronTime);
 app.post('/validate-cron-time', validateCronTime);
 app.use('/students', studentRoutes);
 

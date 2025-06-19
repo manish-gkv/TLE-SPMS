@@ -18,6 +18,9 @@ class cornScheduler {
             throw new Error("Invalid cron time format");
         }
     }
+    getCronTime() {
+        return this.CronTime;
+    }
     setJob(job) {
         this.job = job;
     }
