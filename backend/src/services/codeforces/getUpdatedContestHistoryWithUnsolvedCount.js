@@ -12,9 +12,6 @@ export default function getUpadtedContestHistoryWithUnsolvedCount(userSubmission
         const contestProblems = problemSet.filter(
             problem => problem.contestId === contest.contestId
         );
-        console.log("Contest ID:", contest.contestId);
-        console.log("Contest Name:", contest.contestName);
-        console.log("Contest Problems:", contestProblems);
         const solvedSet = new Set();
         userSubmissionHistory.forEach(submission => {
             if (
