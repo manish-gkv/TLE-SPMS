@@ -19,14 +19,14 @@ function saveChangesHandler(props) {
                     phoneNumber: studentData.phoneNumber,
                     codeforcesHandle: studentData.codeforcesHandle
                 }),
-            });
-            if (!response.ok) {
-                console.error("Error Adding student data");
-                toast.error('Error in Adding Student')
-                return;
-            }
+            })
             const json = await response.json();
             const data = json.data;
+            if(!data.success){
+                toast.error("Error in Adding Student");
+                console.log(data)
+                return;
+            }
             setStudents([...students, data]);
             setIsOpen(false);
             toast.success(`${data.name} Added`);
