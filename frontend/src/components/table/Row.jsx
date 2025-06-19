@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { API_BASE_URL } from "../../utility/constants";
+import EditStudent from "../popup-buttons/editStudent";
 
 export default function Row(props) {
     console.log(props);
@@ -15,9 +17,11 @@ export default function Row(props) {
                     className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                     >View Profile</button>
                 </Link>
-                
-                <button className="ml-4 text-gray-600 hover:text-red-900 dark:text-gray-400 dark:hover:text-red-300">Edit</button>
-                <button className="ml-4 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                <EditStudent {...props} />
+                <button 
+                    className="ml-4 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                    
+                >Delete</button>
             </td>
         </tr>
     );
