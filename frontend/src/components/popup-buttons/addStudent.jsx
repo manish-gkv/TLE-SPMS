@@ -22,11 +22,7 @@ function saveChangesHandler(props) {
             })
             const json = await response.json();
             const data = json.data;
-            if(!data.success){
-                toast.error("Error in Adding Student");
-                console.log(data)
-                return;
-            }
+            
             setStudents([...students, data]);
             setIsOpen(false);
             toast.success(`${data.name} Added`);
