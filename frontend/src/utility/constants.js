@@ -6,5 +6,5 @@ export const CONTEST_HISTORY_HEADERS = ["Contest Name", "Rank", "Rating Change",
 
 export const CONTEST_HISTORY_FIELDS = ["contestName", "rank", "ratingChange", "unsolvedQuestions"];
 
-export const API_BASE_URL = "http://localhost:3000";
+export const API_BASE_URL = "https://tle-spms.vercel.app";
 
